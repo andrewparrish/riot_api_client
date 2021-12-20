@@ -3,6 +3,7 @@ require 'json'
 
 require 'riot_api_client/matches'
 require 'riot_api_client/summoners'
+require 'riot_api_client/errors'
 
 module RiotApiClient
   class Client
@@ -19,7 +20,12 @@ module RiotApiClient
 
     def get(path, query={})
       request = Excon.get(path, headers: base_headers, query: query)
-      JSON.parse(request.body)
+      resp = JSON.parse(request.body)
+      if (resp.dig('status', 'status_code') && resp['status']['status_code'] == 403)  
+        raise RiotApiClient::Errors::ForbiddenError
+      end
+
+      resp
     end
 
     def update_base_region(region)
