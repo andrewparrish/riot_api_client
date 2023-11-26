@@ -21,7 +21,7 @@ module RiotApiClient
     def get(path, query={})
       request = Excon.get(path, headers: base_headers, query: query)
       resp = JSON.parse(request.body)
-      if (resp.dig('status', 'status_code') && resp['status']['status_code'] == 403)  
+      if (resp.is_a?(Hash) && resp.dig('status', 'status_code') && resp['status']['status_code'] == 403)  
         raise RiotApiClient::Errors::ForbiddenError
       end
 
