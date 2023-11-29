@@ -1,12 +1,14 @@
 require 'excon'
 require 'json'
 
+require 'riot_api_client/accounts'
 require 'riot_api_client/matches'
 require 'riot_api_client/summoners'
 require 'riot_api_client/errors'
 
 module RiotApiClient
   class Client
+    include Accounts
     include Matches
     include Summoners
 
