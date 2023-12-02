@@ -14,10 +14,14 @@ module RiotApiClient
 
     NA_REGION = 'na1'
 
-    def initialize(api_key=ENV['RIOT_API_KEY'], base_region=NA_REGION)
+    CLUSTERS = %w(americas asia europe sea)
+
+    def initialize(api_key=ENV['RIOT_API_KEY'], base_region=NA_REGION, base_cluster=CLUSTERS[0])
       @api_key = api_key
       @connection = Excon.new(base_url, :persistent => false)
       @base_region = base_region
+      raise RiotApiClient::InvalidClusterError unless CLUSTERS.include?(base_cluster)
+      @base_cluster = base_cluster
     end
 
     def get(path, query={})
@@ -36,14 +40,22 @@ module RiotApiClient
 
     private
 
-    def base_url(region=nil)
-      "https://#{region || @base_region}.api.riotgames.com"
+    def base_url(subdomain=nil)
+      "https://#{subdomain || @base_cluster}.api.riotgames.com"
     end
 
     def base_headers 
       {
         'X-Riot-Token' => @api_key
       }
+    end
+
+    def cluster_by_region(region)
+      {
+        'na1' => 'americas',
+        'euw1' => 'europe',
+        'kr' => 'asia'
+      }[region]
     end
   end
 end

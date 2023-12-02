@@ -13,8 +13,8 @@ module RiotApiClient
       resp
     end
 
-    def fetch_summoner_by_puuid(puuid)
-      resp = get("#{base_url}/lol/summoner/v4/summoners/by-puuid/#{puuid}")
+    def fetch_summoner_by_puuid(puuid, region)
+      resp = get("#{base_url(region)}/lol/summoner/v4/summoners/by-puuid/#{puuid}")
       if (resp.dig('status', 'status_code') && resp['status']['status_code'] == 404) 
         raise RiotApiClient::Errors::SummonerNotFoundError
       end
