@@ -10,6 +10,5 @@ module RiotApiClient
 
       resp
     end
-
   end
 end

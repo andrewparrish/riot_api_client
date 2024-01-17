@@ -57,5 +57,9 @@ module RiotApiClient
         'kr' => 'asia'
       }[region]
     end
+
+    def matches_status_code?(resp, status_code)
+      resp.dig('status', 'status_code') && resp['status']['status_code'] == status_code
+    end
   end
 end
