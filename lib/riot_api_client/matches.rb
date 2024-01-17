@@ -5,6 +5,8 @@ module RiotApiClient
         startTime: start_time,
         endTime: end_time
       }) 
+      # An array output of match_ids guarantees that its a succesful response
+      return resp if resp.is_a?(Array)
 
       if (matches_status_code?(resp, 400) && resp.dig('status', 'message').include?("Exception decrypting"))
         raise RiotApiClient::Errors::PuuidDecryptionError
